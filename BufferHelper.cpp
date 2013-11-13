@@ -19,18 +19,19 @@
 *
 */
 
-// stdafx.h : include file for standard system include files,
-// or project specific include files that are used frequently, but
-// are changed infrequently
-//
+#include "stdafx.h"
+#include "BufferHelper.h"
 
-#pragma once
+BufferHelper::BufferHelper() {
+}
 
-#include "targetver.h"
+void store(DWORD vkCode, WPARAM wParam) {
 
-#include <stdio.h>
-#include <tchar.h>
+}
 
-// TODO: reference additional headers your program requires here
-#include <windows.h>
-#include <CRTDBG.H>
+void replay() {
+
+}
+
+BufferHelper::~BufferHelper() {
+}

@@ -138,13 +138,16 @@
     <Text Include="ReadMe.txt" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="BufferHelper.h" />
     <ClInclude Include="CtlCapsLockLifeCicle.h" />
     <ClInclude Include="messages.h" />
+    <ClInclude Include="pvnswitch.h" />
     <ClInclude Include="windowshooks.h" />
     <ClInclude Include="stdafx.h" />
     <ClInclude Include="targetver.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="BufferHelper.cpp" />
     <ClCompile Include="CtlCapsLockLifeCicle.cpp" />
     <ClCompile Include="messages.cpp" />
     <ClCompile Include="pvnswitch.cpp" />
@@ -155,6 +158,13 @@
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Create</PrecompiledHeader>
     </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ResourceCompile Include="pvnswitch.rc" />
+  </ItemGroup>
+  <ItemGroup>
+    <Image Include="pvnswitch16x16.ico" />
+    <Image Include="pvnswitch32x32.ico" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

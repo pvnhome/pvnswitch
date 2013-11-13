@@ -33,6 +33,12 @@
     <ClInclude Include="CtlCapsLockLifeCicle.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="pvnswitch.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="BufferHelper.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="stdafx.cpp">
@@ -50,5 +56,21 @@
     <ClCompile Include="CtlCapsLockLifeCicle.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="BufferHelper.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ResourceCompile Include="pvnswitch.rc">
+      <Filter>Resource Files</Filter>
+    </ResourceCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <Image Include="pvnswitch16x16.ico">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="pvnswitch32x32.ico">
+      <Filter>Resource Files</Filter>
+    </Image>
   </ItemGroup>
 </Project>
