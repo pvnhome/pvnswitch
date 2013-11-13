@@ -1,0 +1,1 @@
+void ExitProcessWithMessage(const UINT uExitCode, const TCHAR *msg);
