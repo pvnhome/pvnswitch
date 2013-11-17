@@ -30,13 +30,13 @@
     <ClInclude Include="messages.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="CtlCapsLockLifeCicle.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="pvnswitch.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="BufferHelper.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="BtnLifeCicle.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
@@ -53,10 +53,10 @@
     <ClCompile Include="messages.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="CtlCapsLockLifeCicle.cpp">
+    <ClCompile Include="BufferHelper.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="BufferHelper.cpp">
+    <ClCompile Include="BtnLifeCicle.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>

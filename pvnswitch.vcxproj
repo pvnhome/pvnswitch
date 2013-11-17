@@ -138,8 +138,8 @@
     <Text Include="ReadMe.txt" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="BtnLifeCicle.h" />
     <ClInclude Include="BufferHelper.h" />
-    <ClInclude Include="CtlCapsLockLifeCicle.h" />
     <ClInclude Include="messages.h" />
     <ClInclude Include="pvnswitch.h" />
     <ClInclude Include="windowshooks.h" />
@@ -147,8 +147,8 @@
     <ClInclude Include="targetver.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="BtnLifeCicle.cpp" />
     <ClCompile Include="BufferHelper.cpp" />
-    <ClCompile Include="CtlCapsLockLifeCicle.cpp" />
     <ClCompile Include="messages.cpp" />
     <ClCompile Include="pvnswitch.cpp" />
     <ClCompile Include="windowshooks.cpp" />

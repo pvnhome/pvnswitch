@@ -19,15 +19,37 @@
 *
 */
 
-#pragma once
+#include "stdafx.h"
+#include "BtnLifeCicle.h"
 
-#include "resource.h"
+void BtnLifeCicle::begTransition(DWORD vkCode, WPARAM wParam) {
+	if (vkCode == switchKey && wParam == WM_KEYUP) {
+		needSwitch = true;
+	} else if (vkCode == translateKey && wParam == WM_KEYUP) {
+		needTranslate = true;
+	}
+	if (vkCode == translateKey || vkCode == switchKey) {
+		processed = true;
+	}
+}
 
-#define MAX_LOADSTRING 100
-#define	WM_USER_SHELLICON WM_USER + 1
+bool BtnLifeCicle::isNeedSwitch() {
+	return needSwitch;
+}
 
-// Standard key assignment
-// TODO: Need to move it to settings
-#define VK_FOR_TRANSLATE VK_APPS
-#define VK_FOR_SWITCH VK_CAPITAL
+bool BtnLifeCicle::isNeedTranslate() {
+	return needTranslate;
+}
 
+bool BtnLifeCicle::isProcessed() {
+	return processed;
+}
+
+void BtnLifeCicle::endTransition(void) {
+	needSwitch = false;
+	needTranslate = false;
+	processed = false;
+}
+
+BtnLifeCicle::~BtnLifeCicle(void) {
+}

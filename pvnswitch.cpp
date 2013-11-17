@@ -22,12 +22,10 @@
 #include "stdafx.h"
 #include <shellapi.h>
 #include "windowshooks.h"
-#include "CtlCapsLockLifeCicle.h"
+#include "BtnLifeCicle.h"
+#include "BufferHelper.h"
 #include "messages.h"
 #include "pvnswitch.h"
-
-#define MAX_LOADSTRING 100
-#define	WM_USER_SHELLICON WM_USER + 1
 
 // Global Variables:
 HINSTANCE hInst;								// current instance
@@ -36,7 +34,8 @@ TCHAR szWindowClass[MAX_LOADSTRING];			// the main window class name
 NOTIFYICONDATA nidApp;
 HMENU hPopMenu;
 HHOOK gKHook;
-CtlCapsLockLifeCicle *gLc;
+BtnLifeCicle *gLc;
+BufferHelper *gBuf;
 
 // Forward declarations of functions included in this code module:
 ATOM				MyRegisterClass(HINSTANCE hInstance);
@@ -60,8 +59,10 @@ int APIENTRY _tWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPTSTR lpCm
 	}
 
 	// Create keyboard life cicle helper:
-	gLc = new CtlCapsLockLifeCicle();
+	gLc = new BtnLifeCicle(VK_FOR_TRANSLATE, VK_FOR_SWITCH);
 	_RPT0(_CRT_WARN, "LC created\n");
+
+	gBuf = new BufferHelper(VK_FOR_TRANSLATE, VK_FOR_SWITCH);
 
 	// Create keyboard hook:
 	gKHook = SetWindowsHookEx(WH_KEYBOARD_LL, WindowsKeyboardHook, GetModuleHandle(NULL), NULL);
@@ -88,6 +89,7 @@ int APIENTRY _tWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPTSTR lpCm
 	UnhookWindowsHookEx(gKHook);
 	_RPT0(_CRT_WARN, "unhooked\n");
 
+	delete gBuf;
 	delete gLc;
 	_RPT0(_CRT_WARN, "LC deleted\n");
 	_RPT0(_CRT_WARN, "stoped\n");
