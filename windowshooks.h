@@ -20,3 +20,4 @@
 */
 
 LRESULT CALLBACK WindowsKeyboardHook(int nCode, WPARAM wParam, LPARAM lParam);
+//LRESULT CALLBACK ShellProc(int nCode, WPARAM wParam, LPARAM lParam);

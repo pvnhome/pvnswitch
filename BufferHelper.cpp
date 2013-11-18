@@ -30,10 +30,7 @@ void BufferHelper::store(DWORD vkCode, WPARAM wParam) {
 	}
 
 	if (isNeedToBuffer(vkCode)) {
-		//BufferedEvent evt(vkCode, wParam); 
-		//buffer.push_back(std::move(evt));
 		buffer.push_back(BufferedEvent(vkCode, wParam));
-		//buffer.push_back(std::move(BufferedEvent(vkCode, wParam)));
 	} else if (isNeedToClear(vkCode)) {
 		if (!buffer.empty()) {
 			_RPT1(_CRT_WARN, "<<<=== buffer cleared: cnt=%d\n", buffer.size());
@@ -54,13 +51,11 @@ void BufferHelper::doNextLang(HWND hWnd) {
 
 void BufferHelper::replay(HWND hWnd) {
 	if (!buffer.empty()) {
-		doNextLang(hWnd);
-
 		int keyCnt = 0;
-		INPUT *ip = new INPUT[buffer.size() * 2 + 2];
+		INPUT *ip = new INPUT[(buffer.size() + cursorPos + 2) * 2]; 
 
 		_RPT0(_CRT_WARN, "=== replay ===\n");
-
+		
 		for (int i = 0; i < cursorPos; i++) {
 			add(ip, &keyCnt, VK_RIGHT);
 		}
@@ -72,9 +67,15 @@ void BufferHelper::replay(HWND hWnd) {
 				add(ip, &keyCnt, VK_BACK);
 			}
 		}
-		
+
+		SendInput(keyCnt, ip, sizeof(INPUT));
+
+		doNextLang(hWnd);
+
+		keyCnt = 0;
+
 		for (std::deque<BufferedEvent>::const_iterator i = buffer.begin(); i != buffer.end(); ++i) {
-			addInput(ip, keyCnt++, (WORD) i->vkCode, i->wParam == WM_KEYDOWN ? 0 : KEYEVENTF_KEYUP);
+			addInput(ip, keyCnt++, (WORD)i->vkCode, i->wParam == WM_KEYDOWN ? 0 : KEYEVENTF_KEYUP);
 		}
 
 		SendInput(keyCnt, ip, sizeof(INPUT));
@@ -124,8 +125,6 @@ bool BufferHelper::isPrinable(DWORD vkCode) {
 		return true;
 	} else if (vkCode >= VK_OEM_4 && vkCode <= VK_OEM_8) {
 		return true;
-	} else if (vkCode == VK_TAB) {
-		return true;
 	}
 	return false;
 };
@@ -139,7 +138,7 @@ bool BufferHelper::isNeedToClear(DWORD vkCode) {
 	return true;
 };
 
-void BufferHelper::addInput(INPUT *ip, int ind, WORD wVk, DWORD dwFlags) {
+void BufferHelper::addInput(INPUT *ip, int ind, WORD wVk, DWORD dwFlags) { //TODO ind and ip
 	_RPT1(_CRT_WARN, "R->%02X\n", wVk);
 
 	ip[ind].type = INPUT_KEYBOARD;
@@ -152,7 +151,7 @@ void BufferHelper::addInput(INPUT *ip, int ind, WORD wVk, DWORD dwFlags) {
 	ip[ind].ki.dwFlags = dwFlags; // 0 for key press
 }
 
-void BufferHelper::add(INPUT *ip, int *ind, WORD wVk) {
+void BufferHelper::add(INPUT *ip, int *ind, WORD wVk) {//TODO ind and ip
 	addInput(ip, *ind, wVk, 0);
 	*ind = *ind + 1;
 	addInput(ip, *ind, wVk, KEYEVENTF_KEYUP);

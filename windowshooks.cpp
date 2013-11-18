@@ -34,7 +34,6 @@ LRESULT CALLBACK WindowsKeyboardHook(int nCode, WPARAM wParam, LPARAM lParam) {
 	if (hookIsActive && nCode >= 0 && nCode == HC_ACTION) {
 		KBDLLHOOKSTRUCT   *ks = (KBDLLHOOKSTRUCT*)lParam;
 
-		//_RPT5(_CRT_WARN, "key: %d=>VK_CAPITAL=%d (%d=>WM_KEYDOWN=%d,WM_KEYUP=%d)\n", ks->vkCode, VK_CAPITAL, wParam, WM_KEYDOWN, WM_KEYUP);
 		_RPT5(_CRT_WARN, "key: %d %02X (wp=%d, flags=%d, scan=%d)\n", ks->vkCode, ks->vkCode, wParam, ks->flags, ks->scanCode);
 
 		gLc->begTransition(ks->vkCode, wParam);
@@ -56,12 +55,10 @@ LRESULT CALLBACK WindowsKeyboardHook(int nCode, WPARAM wParam, LPARAM lParam) {
 					hookIsActive = true;
 				}
 
-				//_RPT0(_CRT_WARN, "(ret 1)\n");
 				gLc->endTransition();
 				return 1;
 			}
 		} else if (gLc->isProcessed()) {
-			//_RPT0(_CRT_WARN, "VK_CAPITAL (ret 1)\n");
 			gLc->endTransition();
 			return 1;
 		}

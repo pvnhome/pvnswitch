@@ -26,13 +26,9 @@
 
 class BufferedEvent {
 public:
-	BufferedEvent(DWORD  c, WPARAM p) :vkCode(c), wParam(p) {
-		//_RPT2(_CRT_WARN, "BufferedEvent = %d,%d\n", vkCode, wParam);
-	}
+	BufferedEvent(DWORD  c, WPARAM p) :vkCode(c), wParam(p) {}
 
-	BufferedEvent(const BufferedEvent& obj) :vkCode(obj.vkCode), wParam(obj.wParam) {
-		//_RPT2(_CRT_WARN, "BufferedEvent (copy) = %d,%d\n", vkCode, wParam);
-	}
+	BufferedEvent(const BufferedEvent& obj) :vkCode(obj.vkCode), wParam(obj.wParam) {}
 	
 	BufferedEvent& operator=(const BufferedEvent& obj) {
 		vkCode = obj.vkCode;
@@ -40,31 +36,7 @@ public:
 		return *this;
 	}
 	
-	// Move constructor (C++11)
-	/*
-	BufferedEvent(BufferedEvent&& other) {
-		_RPT2(_CRT_WARN, "BufferedEvent (move) from %d,%d\n", other.vkCode, other.wParam);
-		//vkCode = other.vkCode;
-		//wParam = other.wParam;
-		//other.vkCode = 0;
-		//other.wParam = 0;
-		*this = std::move(other);
-	}
-
-	BufferedEvent& operator=(BufferedEvent&& other) {
-		if (this != &other) {
-			vkCode = other.vkCode;
-			wParam = other.wParam;
-			other.vkCode = 0;
-			other.wParam = 0;
-		}
-		return *this;
-	}
-	*/
-
-	~BufferedEvent() {
-		//_RPT2(_CRT_WARN, "destructor = %d,%d\n", vkCode, wParam);
-	}
+	~BufferedEvent() {}
 
 	DWORD  vkCode;
 	WPARAM wParam;
