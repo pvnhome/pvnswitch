@@ -26,7 +26,7 @@ void BufferHelper::store(DWORD vkCode, WPARAM wParam) {
 	if (clearAfterReplay && vkCode != translateKey) {
 		_RPT1(_CRT_WARN, "<<<=== buffer cleared (after replay): cnt=%d\n", buffer.size());
 		clearAfterReplay = false;
-		buffer.clear();
+		clearBuffer();
 	}
 
 	if (isNeedToBuffer(vkCode)) {
@@ -37,7 +37,7 @@ void BufferHelper::store(DWORD vkCode, WPARAM wParam) {
 	} else if (isNeedToClear(vkCode)) {
 		if (!buffer.empty()) {
 			_RPT1(_CRT_WARN, "<<<=== buffer cleared: cnt=%d\n", buffer.size());
-			buffer.clear();
+			clearBuffer();
 		}
 	}
 }
@@ -45,7 +45,7 @@ void BufferHelper::store(DWORD vkCode, WPARAM wParam) {
 void BufferHelper::nextLang(HWND hWnd) {
 	doNextLang(hWnd);
 	_RPT1(_CRT_WARN, "<<<=== buffer cleared (after switch): cnt=%d\n", buffer.size());
-	buffer.clear();
+	clearBuffer();
 }
 
 void BufferHelper::doNextLang(HWND hWnd) {
@@ -61,7 +61,9 @@ void BufferHelper::replay(HWND hWnd) {
 
 		_RPT0(_CRT_WARN, "=== replay ===\n");
 
-		add(ip, &keyCnt, VK_END);
+		for (int i = 0; i < cursorPos; i++) {
+			add(ip, &keyCnt, VK_RIGHT);
+		}
 		for (std::deque<BufferedEvent>::const_iterator i = buffer.begin(); i != buffer.end(); ++i) {
 			if ((i->vkCode == VK_BACK || i->vkCode == VK_DELETE) && i->wParam == WM_KEYUP) {
 				keyCnt -= 2;
@@ -157,7 +159,12 @@ void BufferHelper::add(INPUT *ip, int *ind, WORD wVk) {
 	*ind = *ind + 1;
 }
 
+void BufferHelper::clearBuffer(void) {
+	buffer.clear();
+	cursorPos = 0;
+}
+
 BufferHelper::~BufferHelper() {
 	_RPT0(_CRT_WARN, "~BufferHelper\n");
-	buffer.clear();
+	clearBuffer();
 }
