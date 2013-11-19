@@ -22,6 +22,13 @@
 #include "stdafx.h"
 #include "BufferHelper.h"
 
+#define BUFFER_LENGTH 1024
+
+const TCHAR *SKYPE = L"Skype";
+const TCHAR *CYR = L"¨ÉÖÓÊÅÍÃØÙÇÕÚÔÛÂÀÏÐÎËÄÆÝ‗×ÑÌÈÒÜÁÞ¸יצףךוםדרשחץתפûגאןנמכהז‎ÿקסלטעüב‏";
+const TCHAR *LAT = LR"(~QWERTYUIOP{}ASDFGHJKL:"ZXCVBNM<>`qwertyuiop[]asdfghjkl;'zxcvbnm,.)";
+const size_t CYR_LAT_LEN = wcslen(CYR);
+
 void BufferHelper::store(DWORD vkCode, WPARAM wParam) {
 	if (clearAfterReplay && vkCode != translateKey) {
 		_RPT1(_CRT_WARN, "<<<=== buffer cleared (after replay): cnt=%d\n", buffer.size());
@@ -50,12 +57,26 @@ void BufferHelper::doNextLang(HWND hWnd) {
 }
 
 void BufferHelper::replay(HWND hWnd) {
+	TCHAR szBuf[BUFFER_LENGTH];
+	GetWindowText(hWnd, szBuf, BUFFER_LENGTH);
+
+	_RPTW1(_CRT_WARN, _T("=== replay (%s) ===\n"), szBuf);
+
+	TCHAR *skype = wcsstr(szBuf, SKYPE);
+	if (skype == NULL) {
+		replayDefault(hWnd);
+	} else {
+		replaySkypeHack(hWnd);
+	}
+}
+
+void BufferHelper::replayDefault(HWND hWnd) {
+	_RPT0(_CRT_WARN, "--- default ---\n");
+
 	if (!buffer.empty()) {
 		int keyCnt = 0;
-		INPUT *ip = new INPUT[(buffer.size() + cursorPos + 2) * 2]; 
+		INPUT *ip = new INPUT[buffer.size() + (cursorPos * 2)];
 
-		_RPT0(_CRT_WARN, "=== replay ===\n");
-		
 		for (int i = 0; i < cursorPos; i++) {
 			add(ip, &keyCnt, VK_RIGHT);
 		}
@@ -84,6 +105,54 @@ void BufferHelper::replay(HWND hWnd) {
 
 		_RPT0(_CRT_WARN, "===>>> buffer will be cleared ASAP\n");
 		clearAfterReplay = true;
+	}
+}
+
+void BufferHelper::replaySkypeHack(HWND hWnd) {
+	int  idActive = GetWindowThreadProcessId(hWnd, NULL);
+	if (AttachThreadInput(GetCurrentThreadId(), idActive, TRUE)) {
+		HWND  hwndFocused = GetFocus();
+		if (hwndFocused != NULL) {
+			// Get text from focused window
+			TCHAR szBuf[BUFFER_LENGTH];
+			SendMessage(hwndFocused, WM_GETTEXT, BUFFER_LENGTH, (LPARAM)szBuf);
+			_RPTW1(_CRT_WARN, _T("focused get text: %s\n"), szBuf);
+
+			// Convert text
+			size_t len = wcslen(szBuf);
+
+			for (size_t i = 0; i < len; i++) {
+				TCHAR ch = szBuf[i];
+				for (size_t j = 0; j < CYR_LAT_LEN; j++) {
+					if (ch == CYR[j]) {
+						szBuf[i] = LAT[j];
+					} else if (ch == LAT[j]) {
+						szBuf[i] = CYR[j];
+					}
+				}
+			}
+
+			_RPTW1(_CRT_WARN, _T("converted: %s\n"), szBuf);
+
+			// Send text back
+			SendMessage(hwndFocused, WM_SETTEXT, 0, (LPARAM)szBuf);
+
+			// Move to the end
+			int keyCnt = 0;
+			INPUT *ip = new INPUT[2];
+            add(ip, &keyCnt, VK_END);
+			SendInput(keyCnt, ip, sizeof(INPUT));
+			delete ip;
+
+			// Switch language
+			doNextLang(hWnd);
+		}
+		AttachThreadInput(GetCurrentThreadId(), idActive, FALSE);
+	}
+
+	if (!buffer.empty()) {
+		_RPT1(_CRT_WARN, "<<<=== buffer cleared (skype): cnt=%d\n", buffer.size());
+		clearBuffer();
 	}
 }
 

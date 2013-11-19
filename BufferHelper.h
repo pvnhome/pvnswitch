@@ -65,6 +65,9 @@ private:
 
 	std::deque<BufferedEvent> buffer;
 
+	void replayDefault(HWND hWnd);
+	void replaySkypeHack(HWND hWnd);
+
 	bool isNeedToBuffer(DWORD vkCode);
 	bool isPrinable(DWORD vkCode);
 	bool isNeedToClear(DWORD vkCode);
