@@ -28,6 +28,6 @@
 
 // Standard key assignment
 // TODO: Need to move it to settings
-#define VK_FOR_TRANSLATE VK_APPS
+//#define VK_FOR_TRANSLATE VK_APPS
 #define VK_FOR_SWITCH VK_CAPITAL
 

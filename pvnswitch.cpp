@@ -48,6 +48,47 @@ int APIENTRY _tWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPTSTR lpCm
 
 	_RPT0(_CRT_WARN, "started\n");
 
+	// Parse command line params
+	DWORD vkCode = VK_APPS;
+	LPWSTR *szArglist;
+	int nArgs;
+	int i;
+
+	szArglist = CommandLineToArgvW(GetCommandLineW(), &nArgs);
+	if (NULL == szArglist) {
+		ExitProcessWithMessage(2, _T("CommandLineToArgvW failed"));
+	} else {
+		_RPT0(_CRT_WARN, "Params:\n");
+		for (i = 0; i < nArgs; i++) {
+			_RPT2(_CRT_WARN, "%d: %ws\n", i, szArglist[i]);
+			
+			if (wcscmp(szArglist[i], L"-tAPPS") == 0) {
+				_RPT0(_CRT_WARN, "Key for correction is VK_APPS\n");
+				vkCode = VK_APPS;
+			} else if (wcscmp(szArglist[i], L"-tLSHIFT") == 0) {
+				vkCode = VK_LSHIFT;
+			} else if (wcscmp(szArglist[i], L"-tRSHIFT") == 0) {
+				vkCode = VK_RSHIFT;
+			} else if (wcscmp(szArglist[i], L"-tLCONTROL") == 0) {
+				vkCode = VK_LCONTROL;
+			} else if (wcscmp(szArglist[i], L"-tRCONTROL") == 0) {
+				vkCode = VK_RCONTROL;
+			} else if (wcscmp(szArglist[i], L"-tLWIN") == 0) {
+				vkCode = VK_LWIN;
+			} else if (wcscmp(szArglist[i], L"-tRWIN") == 0) {
+				vkCode = VK_RWIN;
+			} else if (wcscmp(szArglist[i], L"-tLMENU") == 0) {
+				vkCode = VK_LMENU;
+			} else if (wcscmp(szArglist[i], L"-tRMENU") == 0) {
+				_RPT0(_CRT_WARN, "Key for correction is VK_RMENU\n");
+				vkCode = VK_RMENU;
+			}
+		}
+	}
+	
+	// Free memory allocated for CommandLineToArgvW arguments.
+	LocalFree(szArglist);
+
 	// Initialize global strings
 	LoadString(hInstance, IDS_APP_TITLE, szTitle, MAX_LOADSTRING);
 	LoadString(hInstance, IDC_WNDCLASS, szWindowClass, MAX_LOADSTRING);
@@ -59,10 +100,10 @@ int APIENTRY _tWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPTSTR lpCm
 	}
 
 	// Create keyboard life cicle helper:
-	gLc = new BtnLifeCicle(VK_FOR_TRANSLATE, VK_FOR_SWITCH);
+	gLc = new BtnLifeCicle(vkCode, VK_FOR_SWITCH);
 	_RPT0(_CRT_WARN, "LC created\n");
 
-	gBuf = new BufferHelper(VK_FOR_TRANSLATE, VK_FOR_SWITCH);
+	gBuf = new BufferHelper(vkCode, VK_FOR_SWITCH);
 
 	// Create keyboard hook:
 	gKHook = SetWindowsHookEx(WH_KEYBOARD_LL, WindowsKeyboardHook, GetModuleHandle(NULL), NULL);
