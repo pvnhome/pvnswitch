@@ -65,19 +65,20 @@ int APIENTRY _tWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPTSTR lpCm
 			if (wcscmp(szArglist[i], L"-tAPPS") == 0) {
 				_RPT0(_CRT_WARN, "Key for correction is VK_APPS\n");
 				vkCode = VK_APPS;
-			} else if (wcscmp(szArglist[i], L"-tLSHIFT") == 0) {
-				vkCode = VK_LSHIFT;
-			} else if (wcscmp(szArglist[i], L"-tRSHIFT") == 0) {
-				vkCode = VK_RSHIFT;
 			} else if (wcscmp(szArglist[i], L"-tLCONTROL") == 0) {
+				_RPT0(_CRT_WARN, "Key for correction is VK_LCONTROL\n");
 				vkCode = VK_LCONTROL;
 			} else if (wcscmp(szArglist[i], L"-tRCONTROL") == 0) {
+				_RPT0(_CRT_WARN, "Key for correction is VK_RCONTROL\n");
 				vkCode = VK_RCONTROL;
 			} else if (wcscmp(szArglist[i], L"-tLWIN") == 0) {
+				_RPT0(_CRT_WARN, "Key for correction is VK_LWIN\n");
 				vkCode = VK_LWIN;
 			} else if (wcscmp(szArglist[i], L"-tRWIN") == 0) {
+				_RPT0(_CRT_WARN, "Key for correction is VK_RWIN\n");
 				vkCode = VK_RWIN;
 			} else if (wcscmp(szArglist[i], L"-tLMENU") == 0) {
+				_RPT0(_CRT_WARN, "Key for correction is VK_LMENU\n");
 				vkCode = VK_LMENU;
 			} else if (wcscmp(szArglist[i], L"-tRMENU") == 0) {
 				_RPT0(_CRT_WARN, "Key for correction is VK_RMENU\n");
