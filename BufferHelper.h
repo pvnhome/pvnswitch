@@ -73,7 +73,7 @@ private:
 	bool isNeedToClear(DWORD vkCode);
 
 	void addInput(INPUT *ip, int ind, WORD wVk, DWORD dwFlags);
-	void BufferHelper::add(INPUT *ip, int *ind, WORD wVk);
+	void add(INPUT *ip, int *ind, WORD wVk);
 	void doNextLang(HWND hWnd);
 	void clearBuffer(void);
 };

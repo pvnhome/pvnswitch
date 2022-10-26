@@ -107,7 +107,7 @@ int APIENTRY _tWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPTSTR lpCm
 	gBuf = new BufferHelper(vkCode, VK_FOR_SWITCH);
 
 	// Create keyboard hook:
-	gKHook = SetWindowsHookEx(WH_KEYBOARD_LL, WindowsKeyboardHook, GetModuleHandle(NULL), NULL);
+	gKHook = SetWindowsHookEx(WH_KEYBOARD_LL, WindowsKeyboardHook, GetModuleHandle(NULL), 0);
 	if (gKHook == NULL) {
 		_RPT0(_CRT_WARN, "gKHook == NULL\n");
 		ExitProcessWithMessage(2, _T("Error on SetWindowsHookEx()"));

@@ -34,7 +34,8 @@ LRESULT CALLBACK WindowsKeyboardHook(int nCode, WPARAM wParam, LPARAM lParam) {
 	if (hookIsActive && nCode >= 0 && nCode == HC_ACTION) {
 		KBDLLHOOKSTRUCT   *ks = (KBDLLHOOKSTRUCT*)lParam;
 
-		_RPT5(_CRT_WARN, "key: %d %02X (wp=%d, flags=%d, scan=%d)\n", ks->vkCode, ks->vkCode, wParam, ks->flags, ks->scanCode);
+		//_RPT5(_CRT_WARN, "key: %d %02X (wp=%d, flags=%d, scan=%d)\n", ks->vkCode, ks->vkCode, wParam, ks->flags, ks->scanCode);
+		_RPT4(_CRT_WARN, "key: %d %02X (flags=%d, scan=%d)\n", ks->vkCode, ks->vkCode, ks->flags, ks->scanCode);
 
 		gLc->begTransition(ks->vkCode, wParam);
 		

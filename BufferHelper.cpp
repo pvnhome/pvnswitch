@@ -24,10 +24,10 @@
 
 #define BUFFER_LENGTH 1024
 
-const TCHAR *SKYPE = L"Skype";
-const TCHAR *CYR = L"¨ÉÖÓÊÅÍÃØÙÇÕÚÔÛÂÀÏÐÎËÄÆÝ‗×ÑÌÈÒÜÁÞ¸יצףךוםדרשחץתפûגאןנמכהז‎ÿקסלטעüב‏";
-const TCHAR *LAT = LR"(~QWERTYUIOP{}ASDFGHJKL:"ZXCVBNM<>`qwertyuiop[]asdfghjkl;'zxcvbnm,.)";
-const size_t CYR_LAT_LEN = wcslen(CYR);
+const TCHAR *SKYPE = "Skype";
+const TCHAR *CYR = "¨ÉÖÓÊÅÍÃØÙÇÕÚÔÛÂÀÏÐÎËÄÆÝ‗×ÑÌÈÒÜÁÞ¸יצףךוםדרשחץתפûגאןנמכהז‎ÿקסלטעüב‏";
+const TCHAR *LAT = R"(~QWERTYUIOP{}ASDFGHJKL:"ZXCVBNM<>`qwertyuiop[]asdfghjkl;'zxcvbnm,.)";
+const size_t CYR_LAT_LEN = strlen(CYR);
 
 void BufferHelper::store(DWORD vkCode, WPARAM wParam) {
 	if (clearAfterReplay && vkCode != translateKey) {
@@ -62,7 +62,7 @@ void BufferHelper::replay(HWND hWnd) {
 
 	_RPTW1(_CRT_WARN, _T("=== replay (%s) ===\n"), szBuf);
 
-	TCHAR *skype = wcsstr(szBuf, SKYPE);
+	TCHAR *skype = strstr(szBuf, SKYPE);
 	if (skype == NULL) {
 		replayDefault(hWnd);
 	} else {
@@ -119,7 +119,7 @@ void BufferHelper::replaySkypeHack(HWND hWnd) {
 			_RPTW1(_CRT_WARN, _T("focused get text: %s\n"), szBuf);
 
 			// Convert text
-			size_t len = wcslen(szBuf);
+			size_t len = strlen(szBuf);
 
 			for (size_t i = 0; i < len; i++) {
 				TCHAR ch = szBuf[i];
