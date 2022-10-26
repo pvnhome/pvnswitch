@@ -46,10 +46,15 @@ INT_PTR CALLBACK	About(HWND, UINT, WPARAM, LPARAM);
 int APIENTRY _tWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPTSTR lpCmdLine, int nCmdShow) {
 	MSG msg;
 
-	_RPT0(_CRT_WARN, "started\n");
+	LOG("started");
+
+	//key: 165 A5 (wp=260, flags=33, scan=56)
+	//key: 165 A5 (wp=257, flags=129, scan=56)
+	//key: 165 A5 (wp=260, flags=33, scan=56)
+	//key: 165 A5 (wp=257, flags=129, scan=56)
 
 	// Parse command line params
-	DWORD vkCode = VK_APPS;
+	DWORD vkCode = VK_RMENU;
 	LPWSTR *szArglist;
 	int nArgs;
 	int i;
@@ -58,30 +63,30 @@ int APIENTRY _tWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPTSTR lpCm
 	if (NULL == szArglist) {
 		ExitProcessWithMessage(2, _T("CommandLineToArgvW failed"));
 	} else {
-		_RPT0(_CRT_WARN, "Params:\n");
+		LOG("Params:");
 		for (i = 0; i < nArgs; i++) {
-			_RPT2(_CRT_WARN, "%d: %ws\n", i, szArglist[i]);
+			LOGF2("%d: %s", i, szArglist[i]);
 			
 			if (wcscmp(szArglist[i], L"-tAPPS") == 0) {
-				_RPT0(_CRT_WARN, "Key for correction is VK_APPS\n");
+				LOG("Key for correction is VK_APPS");
 				vkCode = VK_APPS;
 			} else if (wcscmp(szArglist[i], L"-tLCONTROL") == 0) {
-				_RPT0(_CRT_WARN, "Key for correction is VK_LCONTROL\n");
+				LOG("Key for correction is VK_LCONTROL");
 				vkCode = VK_LCONTROL;
 			} else if (wcscmp(szArglist[i], L"-tRCONTROL") == 0) {
-				_RPT0(_CRT_WARN, "Key for correction is VK_RCONTROL\n");
+				LOG("Key for correction is VK_RCONTROL");
 				vkCode = VK_RCONTROL;
 			} else if (wcscmp(szArglist[i], L"-tLWIN") == 0) {
-				_RPT0(_CRT_WARN, "Key for correction is VK_LWIN\n");
+				LOG("Key for correction is VK_LWIN");
 				vkCode = VK_LWIN;
 			} else if (wcscmp(szArglist[i], L"-tRWIN") == 0) {
-				_RPT0(_CRT_WARN, "Key for correction is VK_RWIN\n");
+				LOG("Key for correction is VK_RWIN");
 				vkCode = VK_RWIN;
 			} else if (wcscmp(szArglist[i], L"-tLMENU") == 0) {
-				_RPT0(_CRT_WARN, "Key for correction is VK_LMENU\n");
+				LOG("Key for correction is VK_LMENU");
 				vkCode = VK_LMENU;
 			} else if (wcscmp(szArglist[i], L"-tRMENU") == 0) {
-				_RPT0(_CRT_WARN, "Key for correction is VK_RMENU\n");
+				LOG("Key for correction is VK_RMENU");
 				vkCode = VK_RMENU;
 			}
 		}
@@ -102,24 +107,24 @@ int APIENTRY _tWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPTSTR lpCm
 
 	// Create keyboard life cicle helper:
 	gLc = new BtnLifeCicle(vkCode, VK_FOR_SWITCH);
-	_RPT0(_CRT_WARN, "LC created\n");
+	LOG("LC created");
 
 	gBuf = new BufferHelper(vkCode, VK_FOR_SWITCH);
 
 	// Create keyboard hook:
 	gKHook = SetWindowsHookEx(WH_KEYBOARD_LL, WindowsKeyboardHook, GetModuleHandle(NULL), 0);
 	if (gKHook == NULL) {
-		_RPT0(_CRT_WARN, "gKHook == NULL\n");
+		LOG("gKHook == NULL");
 		ExitProcessWithMessage(2, _T("Error on SetWindowsHookEx()"));
 	}
-	_RPT0(_CRT_WARN, "hooked\n");
+	LOG("hooked");
 
 	// Main message loop:
 	BOOL bRet;
 	while ((bRet = GetMessage(&msg, NULL, 0, 0)) != 0) {
 		if (bRet == -1) {
 			// handle the error and possibly exit
-			_RPT0(_CRT_WARN, "exit from loop with bRet == -1\n");
+			LOG("exit from loop with bRet == -1");
 			break;
 		} else {
 			TranslateMessage(&msg);
@@ -129,12 +134,12 @@ int APIENTRY _tWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPTSTR lpCm
 
 	// Free resources
 	UnhookWindowsHookEx(gKHook);
-	_RPT0(_CRT_WARN, "unhooked\n");
+	LOG("unhooked");
 
 	delete gBuf;
 	delete gLc;
-	_RPT0(_CRT_WARN, "LC deleted\n");
-	_RPT0(_CRT_WARN, "stoped\n");
+	LOG("LC deleted");
+	LOG("stoped");
 
 	return (int)msg.wParam;
 }
@@ -242,7 +247,7 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam) 
 			DialogBox(hInst, MAKEINTRESOURCE(IDD_ABOUTBOX), hWnd, About);
 			break;
 		case IDM_EXIT:
-			_RPT0(_CRT_WARN, "Exit command\n");
+			LOG("Exit command");
 			Shell_NotifyIcon(NIM_DELETE, &nidApp);
 			DestroyWindow(hWnd);
 			break;

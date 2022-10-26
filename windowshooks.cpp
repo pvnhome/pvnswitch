@@ -34,8 +34,7 @@ LRESULT CALLBACK WindowsKeyboardHook(int nCode, WPARAM wParam, LPARAM lParam) {
 	if (hookIsActive && nCode >= 0 && nCode == HC_ACTION) {
 		KBDLLHOOKSTRUCT   *ks = (KBDLLHOOKSTRUCT*)lParam;
 
-		//_RPT5(_CRT_WARN, "key: %d %02X (wp=%d, flags=%d, scan=%d)\n", ks->vkCode, ks->vkCode, wParam, ks->flags, ks->scanCode);
-		_RPT4(_CRT_WARN, "key: %d %02X (flags=%d, scan=%d)\n", ks->vkCode, ks->vkCode, ks->flags, ks->scanCode);
+		LOGF5("key: %d %02X (wp=%d, flags=%d, scan=%d)", ks->vkCode, ks->vkCode, wParam, ks->flags, ks->scanCode);
 
 		gLc->begTransition(ks->vkCode, wParam);
 		
@@ -45,12 +44,12 @@ LRESULT CALLBACK WindowsKeyboardHook(int nCode, WPARAM wParam, LPARAM lParam) {
 			HWND hWnd = GetForegroundWindow();
 			if (hWnd) {
 				if (gLc->isNeedSwitch()) {
-					_RPT0(_CRT_WARN, "======================== Switched to next ============================\n");
+					LOG("======================== Switched to next ============================");
 					hookIsActive = false;
 					gBuf->nextLang(hWnd);
 					hookIsActive = true;
 				} else if (gLc->isNeedTranslate()) {
-					_RPT0(_CRT_WARN, "++++++++++++++++++ Translate (ret 1) ++++++++++++++++++++++++++\n");
+					LOG("++++++++++++++++++ Translate (ret 1) ++++++++++++++++++++++++++");
 					hookIsActive = false;
                     gBuf->replay(hWnd);
 					hookIsActive = true;

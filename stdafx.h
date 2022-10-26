@@ -33,4 +33,5 @@
 
 // TODO: reference additional headers your program requires here
 #include <windows.h>
-#include <crtdbg.h>
+
+#include "debglog.h"

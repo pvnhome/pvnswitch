@@ -31,7 +31,7 @@ const size_t CYR_LAT_LEN = strlen(CYR);
 
 void BufferHelper::store(DWORD vkCode, WPARAM wParam) {
 	if (clearAfterReplay && vkCode != translateKey) {
-		_RPT1(_CRT_WARN, "<<<=== buffer cleared (after replay): cnt=%d\n", buffer.size());
+		LOGF1("<<<=== buffer cleared (after replay): cnt=%d", buffer.size());
 		clearAfterReplay = false;
 		clearBuffer();
 	}
@@ -40,7 +40,7 @@ void BufferHelper::store(DWORD vkCode, WPARAM wParam) {
 		buffer.push_back(BufferedEvent(vkCode, wParam));
 	} else if (isNeedToClear(vkCode)) {
 		if (!buffer.empty()) {
-			_RPT1(_CRT_WARN, "<<<=== buffer cleared: cnt=%d\n", buffer.size());
+			LOGF1("<<<=== buffer cleared: cnt=%d", buffer.size());
 			clearBuffer();
 		}
 	}
@@ -48,7 +48,7 @@ void BufferHelper::store(DWORD vkCode, WPARAM wParam) {
 
 void BufferHelper::nextLang(HWND hWnd) {
 	doNextLang(hWnd);
-	_RPT1(_CRT_WARN, "<<<=== buffer cleared (after switch): cnt=%d\n", buffer.size());
+	LOGF1("<<<=== buffer cleared (after switch): cnt=%d", buffer.size());
 	clearBuffer();
 }
 
@@ -60,7 +60,7 @@ void BufferHelper::replay(HWND hWnd) {
 	TCHAR szBuf[BUFFER_LENGTH];
 	GetWindowText(hWnd, szBuf, BUFFER_LENGTH);
 
-	_RPTW1(_CRT_WARN, _T("=== replay (%s) ===\n"), szBuf);
+	LOGF1("=== replay (%s) ===", szBuf);
 
 	TCHAR *skype = strstr(szBuf, SKYPE);
 	if (skype == NULL) {
@@ -71,7 +71,7 @@ void BufferHelper::replay(HWND hWnd) {
 }
 
 void BufferHelper::replayDefault(HWND hWnd) {
-	_RPT0(_CRT_WARN, "--- default ---\n");
+	LOG("--- default ---");
 
 	if (!buffer.empty()) {
 		int keyCnt = 0;
@@ -84,7 +84,7 @@ void BufferHelper::replayDefault(HWND hWnd) {
 			if ((i->vkCode == VK_BACK || i->vkCode == VK_DELETE) && i->wParam == WM_KEYUP) {
 				keyCnt -= 2;
 			} else if (isPrinable(i->vkCode) && i->wParam == WM_KEYUP) {
-				_RPT1(_CRT_WARN, "%02X->", i->vkCode);
+				LOGF1("%02X->", i->vkCode);
 				add(ip, &keyCnt, VK_BACK);
 			}
 		}
@@ -103,7 +103,7 @@ void BufferHelper::replayDefault(HWND hWnd) {
 
 		delete ip;
 
-		_RPT0(_CRT_WARN, "===>>> buffer will be cleared ASAP\n");
+		LOG("===>>> buffer will be cleared ASAP");
 		clearAfterReplay = true;
 	}
 }
@@ -116,7 +116,7 @@ void BufferHelper::replaySkypeHack(HWND hWnd) {
 			// Get text from focused window
 			TCHAR szBuf[BUFFER_LENGTH];
 			SendMessage(hwndFocused, WM_GETTEXT, BUFFER_LENGTH, (LPARAM)szBuf);
-			_RPTW1(_CRT_WARN, _T("focused get text: %s\n"), szBuf);
+			LOGF1("focused get text: %s", szBuf);
 
 			// Convert text
 			size_t len = strlen(szBuf);
@@ -132,7 +132,7 @@ void BufferHelper::replaySkypeHack(HWND hWnd) {
 				}
 			}
 
-			_RPTW1(_CRT_WARN, _T("converted: %s\n"), szBuf);
+			LOGF1("converted: %s", szBuf);
 
 			// Send text back
 			SendMessage(hwndFocused, WM_SETTEXT, 0, (LPARAM)szBuf);
@@ -151,7 +151,7 @@ void BufferHelper::replaySkypeHack(HWND hWnd) {
 	}
 
 	if (!buffer.empty()) {
-		_RPT1(_CRT_WARN, "<<<=== buffer cleared (skype): cnt=%d\n", buffer.size());
+		LOGF1("<<<=== buffer cleared (skype): cnt=%d", buffer.size());
 		clearBuffer();
 	}
 }
@@ -208,7 +208,7 @@ bool BufferHelper::isNeedToClear(DWORD vkCode) {
 };
 
 void BufferHelper::addInput(INPUT *ip, int ind, WORD wVk, DWORD dwFlags) { //TODO ind and ip
-	_RPT1(_CRT_WARN, "R->%02X\n", wVk);
+	LOGF1("R->%02X", wVk);
 
 	ip[ind].type = INPUT_KEYBOARD;
 	ip[ind].ki.wScan = 0; // hardware scan code for key
@@ -233,6 +233,6 @@ void BufferHelper::clearBuffer(void) {
 }
 
 BufferHelper::~BufferHelper() {
-	_RPT0(_CRT_WARN, "~BufferHelper\n");
+	LOG("~BufferHelper");
 	clearBuffer();
 }

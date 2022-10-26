@@ -1,29 +1,37 @@
 LINK_TARGET = pvnswitch.exe
 
+PROJECT_ROOT = $(dir $(abspath $(lastword $(MAKEFILE_LIST))))
+
 OBJS = pvnswitch.o stdafx.o BtnLifeCicle.o BufferHelper.o messages.o windowshooks.o resources.o
 
 REBUILDABLES = $(OBJS) $(LINK_TARGET)
 
-clean :
-	rm -f $(REBUILDABLES)
-	echo Clean done
+ifeq ($(BUILD_MODE),debug)
+	CFLAGS += -g -DWIN32 -D_DEBUG -D_CONSOLE -D_LIB -finput-charset=cp1251
+	LDFLAGS += -g -DWIN32 -D_DEBUG -D_CONSOLE -D_LIB
+else ifeq ($(BUILD_MODE),run)
+	CFLAGS += -O2 -DWIN32 -D_CONSOLE -D_LIB -DNDEBUG -finput-charset=cp1251
+else
+    $(error Build mode $(BUILD_MODE) not supported by this Makefile)
+endif
 
-all : $(LINK_TARGET)
-	echo All done
+all:	$(LINK_TARGET)
 
 $(LINK_TARGET) : $(OBJS)
-	g++ -g -static -o $@ $^
+	$(CXX) -static $(LDFLAGS) -o $@ $^
 
-%.o : %.cpp
-	g++ -DWIN32 -D_DEBUG -D_CONSOLE -D_LIB -finput-charset=cp1251 -g -o $@ -c $<
+%.o:	$(PROJECT_ROOT)%.cpp
+	$(CXX) -c $(CFLAGS) -o $@ $<
 
-resources.o : resources.rc
-	windres resources.rc -o resources.o
+resources.o : $(PROJECT_ROOT)resources.rc
+	windres $(PROJECT_ROOT)resources.rc -o resources.o
 
-pvnswitch.o : pvnswitch.h
-stdafx.o : stdafx.h
-BtnLifeCicle.o : BtnLifeCicle.h
-BufferHelper.o : BufferHelper.h 
-messages.o : messages.h
-windowshooks.o : windowshooks.h
-resources.o : resources.rc
+clean:
+	rm -f $(REBUILDABLES)
+	
+pvnswitch.o : $(PROJECT_ROOT)pvnswitch.h
+stdafx.o : $(PROJECT_ROOT)stdafx.h
+BtnLifeCicle.o : $(PROJECT_ROOT)BtnLifeCicle.h
+BufferHelper.o : $(PROJECT_ROOT)BufferHelper.h 
+messages.o : $(PROJECT_ROOT)messages.h
+windowshooks.o : $(PROJECT_ROOT)windowshooks.h
