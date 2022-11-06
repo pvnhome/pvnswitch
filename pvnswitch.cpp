@@ -101,6 +101,7 @@ int APIENTRY _tWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPTSTR lpCm
 
    // Perform application initialization:
    if (!InitInstance(hInstance, nCmdShow)) {
+      LOG("InitInstance return FASE");
       return FALSE;
    }
 

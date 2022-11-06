@@ -42,18 +42,6 @@ void BufferHelper::store(DWORD vkCode, WPARAM wParam) {
       } else if (vkCode == translateKey && wParam == WM_KEYUP) {
          needTranslate = true;
       }
-   } else if (altGrState) {
-      if (wParam == WM_KEYUP && vkCode == VK_LCONTROL) {
-         LOG("   - system ctrl up");
-         altGrState = false;
-         processed = true;
-      } else {
-         LOG("   - system ctrl");
-      }
-   } else if (wParam == WM_SYSKEYDOWN && vkCode == VK_LCONTROL) {
-      LOG("   - system ctrl down");
-      altGrState = true;
-      processed = true;
    } else {
       if (clearAfterReplay) {
          LOGF1("<<<=== buffer cleared (after replay): cnt=%lld", buffer.size());
@@ -74,6 +62,18 @@ void BufferHelper::store(DWORD vkCode, WPARAM wParam) {
          } else {
             LOG("   - ctrl state");
          }
+      } else if (altGrState) {
+         if (wParam == WM_KEYUP && vkCode == VK_LCONTROL) {
+            LOG("   - system ctrl up");
+            altGrState = false;
+            processed = true;
+         } else {
+            LOG("   - system ctrl");
+         }
+      } else if (wParam == WM_SYSKEYDOWN && vkCode == VK_LCONTROL) {
+         LOG("   - system ctrl down");
+         altGrState = true;
+         processed = true;
       } else if (vkCode == VK_SPACE && buffer.empty()) {
          LOG("   - first space");
       } else if (isNeedToBuffer(vkCode, wParam)) {
