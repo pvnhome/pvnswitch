@@ -7,10 +7,10 @@ OBJS = pvnswitch.o stdafx.o BtnLifeCicle.o BufferHelper.o messages.o windowshook
 REBUILDABLES = $(OBJS) $(LINK_TARGET)
 
 ifeq ($(BUILD_MODE),debug)
-	CFLAGS += -g -DWIN32 -D_DEBUG -D_CONSOLE -D_LIB -finput-charset=cp1251
-	LDFLAGS += -g -DWIN32 -D_DEBUG -D_CONSOLE -D_LIB
+	CFLAGS += -g -O0 -DWIN32 -D_DEBUG -D_WINDOWS -finput-charset=cp1251
+	LDFLAGS += -g -DWIN32 -D_DEBUG -D_WINDOWS
 else ifeq ($(BUILD_MODE),run)
-	CFLAGS += -O2 -DWIN32 -D_CONSOLE -D_LIB -DNDEBUG -finput-charset=cp1251
+	CFLAGS += -O3 -DWIN32 -D_WINDOWS -DNDEBUG -finput-charset=cp1251
 else
     $(error Build mode $(BUILD_MODE) not supported by this Makefile)
 endif

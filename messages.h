@@ -1,7 +1,7 @@
 /*
-* This file is part of the PvnSwitch (https://sourceforge.net/projects/pvnswitch).
+* This file is part of the PvnSwitch (https://github.com/pvnhome/pvnswitch).
 *
-* Copyright (C) 2013 Victor Pyankov <pvnbips@users.sourceforge.net>
+* Copyright (C) 2013-2022 Victor Pyankov <pvnhome@yandex.ru>
 *
 * This program is free software; you can redistribute it and/or modify
 * it under the terms of the GNU General Public License as published by

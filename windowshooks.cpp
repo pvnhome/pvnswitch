@@ -1,7 +1,7 @@
 /*
-* This file is part of the PvnSwitch (https://sourceforge.net/projects/pvnswitch).
+* This file is part of the PvnSwitch (https://github.com/pvnhome/pvnswitch).
 *
-* Copyright (C) 2013 Victor Pyankov <pvnbips@users.sourceforge.net>
+* Copyright (C) 2013-2022 Victor Pyankov <pvnhome@yandex.ru>
 *
 * This program is free software; you can redistribute it and/or modify
 * it under the terms of the GNU General Public License as published by
@@ -25,45 +25,79 @@
 
 // Global variables
 extern HHOOK gKHook;
-extern BtnLifeCicle *gLc;
+//extern BtnLifeCicle *gLc;
 extern BufferHelper *gBuf;
 
 bool hookIsActive = true;
 
 LRESULT CALLBACK WindowsKeyboardHook(int nCode, WPARAM wParam, LPARAM lParam) {
-	if (hookIsActive && nCode >= 0 && nCode == HC_ACTION) {
+	if (hookIsActive && nCode == HC_ACTION) {
 		KBDLLHOOKSTRUCT   *ks = (KBDLLHOOKSTRUCT*)lParam;
 
-		LOGF5("key: %d %02X (wp=%d, flags=%d, scan=%d)", ks->vkCode, ks->vkCode, wParam, ks->flags, ks->scanCode);
+#ifndef NDEBUG
+		const char* type;
+		if (wParam == WM_KEYDOWN) {
+			type = "WM_KEYDOWN";
+		} else if (wParam == WM_KEYUP) {
+			type = "WM_KEYUP";
+		} else if (wParam == WM_SYSKEYDOWN) {
+			type = "WM_SYSKEYDOWN";
+		} else if (wParam == WM_SYSKEYUP) {
+			type = "WM_SYSKEYUP";
+		} else {
+			type = "N/A";
+		}
+		LOGF5("%s: %ld %02lX (flags=%ld, scan=%ld)", type, ks->vkCode, ks->vkCode, ks->flags, ks->scanCode);
 
-		gLc->begTransition(ks->vkCode, wParam);
-		
+#ifdef DEBUG_LLKHF_FLAGS
+		if (ks->flags & LLKHF_EXTENDED) {
+		   LOG("   + EXTENDED");
+		}
+      if (ks->flags & LLKHF_LOWER_IL_INJECTED) {
+         LOG("   + IL_INJECTED");
+      }
+      if (ks->flags & LLKHF_INJECTED) {
+         LOG("   + INJECTED");
+      }
+      if (ks->flags & LLKHF_ALTDOWN) {
+         LOG("   + ALTDOWN");
+      }
+      if (ks->flags & LLKHF_UP) {
+         LOG("   + UP");
+      }
+#endif
+#endif
+
+		//gLc->begTransition(ks->vkCode, wParam);
+
 		gBuf->store(ks->vkCode, wParam);
 
-		if (gLc->isNeedSwitch() || gLc->isNeedTranslate()) {
+		if (gBuf->isNeedSwitch() || gBuf->isNeedTranslate()) {
 			HWND hWnd = GetForegroundWindow();
 			if (hWnd) {
-				if (gLc->isNeedSwitch()) {
+				if (gBuf->isNeedSwitch()) {
 					LOG("======================== Switched to next ============================");
 					hookIsActive = false;
 					gBuf->nextLang(hWnd);
 					hookIsActive = true;
-				} else if (gLc->isNeedTranslate()) {
+				} else if (gBuf->isNeedTranslate()) {
 					LOG("++++++++++++++++++ Translate (ret 1) ++++++++++++++++++++++++++");
 					hookIsActive = false;
-                    gBuf->replay(hWnd);
+               gBuf->replay(hWnd);
 					hookIsActive = true;
 				}
 
-				gLc->endTransition();
+				//gLc->endTransition();
+            LOG("return 1");
 				return 1;
 			}
-		} else if (gLc->isProcessed()) {
-			gLc->endTransition();
+		} else if (gBuf->isProcessed()) {
+			//gLc->endTransition();
+         LOG("return 1");
 			return 1;
 		}
 
-		gLc->endTransition();
+      //gLc->endTransition();
 	}
 
 	return CallNextHookEx(gKHook, nCode, wParam, lParam);

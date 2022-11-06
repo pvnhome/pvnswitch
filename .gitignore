@@ -3,3 +3,6 @@
 /build/
 .cproject
 .project
+.settings
+/Release/
+/Debug/
